@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Task & Earn</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f3f6fb;
+  color: #222;
+}
+
+button { cursor: pointer; }
+
+.hidden { display: none !important; }
+
+.auth {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg,#111827,#2563eb);
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 15px 40px #0004;
+}
+
+.logo {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  color: #2563eb;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #777;
+  margin-bottom: 22px;
+}
+
+.tabs {
+  display: flex;
+  margin-bottom: 20px;
+  background: #eef2ff;
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.tabs button {
+  width: 50%;
+  border: 0;
+  padding: 11px;
+  border-radius: 8px;
+  background: transparent;
+  font-weight: bold;
+}
+
+.tabs .active {
+  background: #2563eb;
+  color: white;
+}
+
+input {
+  width: 100%;
+  padding: 13px;
+  margin: 8px 0 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  outline: none;
+}
+
+input:focus { border-color: #2563eb; }
+
+.primary {
+  width: 100%;
+  border: 0;
+  padding: 13px;
+  border-radius: 10px;
+  background: #2563eb;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.error, .success {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.error { color: #dc2626; }
+.success { color: #16a34a; }
+
+#app {
+  display: none;
+  min-height: 100vh;
+  padding-bottom: 75px;
+}
+
+.header {
+  background: #111827;
+  color: white;
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h2 { font-size: 20px; }
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 15px;
+}
+
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 15px #0000000f;
+}
+
+.balance {
+  background: linear-gradient(135deg,#2563eb,#4f46e5);
+  color: white;
+}
+
+.balance h1 {
+  font-size: 32px;
+  margin-top: 8px;
+}
+
+.section-title {
+  margin: 20px 0 12px;
+  font-size: 19px;
+}
+
+.plan {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 15px;
+  margin-bottom: 12px;
+  background: white;
+}
+
+.plan-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 7px 0;
+}
+
+.value {
+  font-weight: bold;
+  color: #2563eb;
+}
+
+.payout {
+  font-weight: bold;
+  color: #16a34a;
+}
+
+.task-btn {
+  width: 100%;
+  margin-top: 10px;
+  border: 0;
+  padding: 11px;
+  border-radius: 9px;
+  background: #111827;
+  color: white;
+  font-weight: bold;
+}
+
+.qr-box { text-align: center; }
+
+.qr-box img {
+  width: 230px;
+  height: 230px;
+  object-fit: contain;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 8px;
+  background: white;
+  margin-top: 15px;
+}
+
+.upi {
+  margin-top: 12px;
+  padding: 10px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  font-weight: bold;
+  overflow-wrap: anywhere;
+}
+
+.info {
+  background: #eff6ff;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 65px;
+  background: white;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 100;
+}
+
+.bottom-nav button {
+  border: 0;
+  background: none;
+  font-size: 12px;
+  color: #666;
+}
+
+.bottom-nav button.active {
+  color: #2563eb;
+  font-weight: bold;
+}
+
+.logout {
+  background: #dc2626;
+  color: white;
+  border: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.note {
+  font-size: 12px;
+  color: #777;
+  line-height: 1.5;
+  margin-top: 12px;
+  text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<!-- AUTH -->
+<div class="auth" id="authPage">
+  <div class="auth-box">
+
+    <div class="logo">TASK & EARN</div>
+    <div class="subtitle">Online Task Platform</div>
+
+    <div class="tabs">
+      <button id="loginTab" class="active"
+        onclick="showLogin()">Login</button>
+      <button id="registerTab"
+        onclick="showRegister()">Register</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="loginForm">
+      <input id="loginUser"
+        type="text"
+        placeholder="Mobile / Username"
+        autocomplete="username">
+
+      <input id="loginPass"
+        type="password"
+        placeholder="Password"
+        autocomplete="current-password">
+
+      <button class="primary" onclick="login()">LOGIN</button>
+      <div id="loginMsg" aria-live="polite"></div>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="registerForm" class="hidden">
+      <input id="regName"
+        type="text"
+        placeholder="Full Name"
+        autocomplete="name">
+
+      <input id="regMobile"
+        type="tel"
+        placeholder="Mobile Number"
+        inputmode="numeric">
+
+      <input id="regPass"
+        type="password"
+        placeholder="Create Password"
+        autocomplete="new-password">
+
+      <input id="regPass2"
+        type="password"
+        placeholder="Confirm Password"
+        autocomplete="new-password">
+
+      <button class="primary"
+        onclick="register()">CREATE ACCOUNT</button>
+
+      <div id="registerMsg" aria-live="polite"></div>
+    </div>
+
+    <div class="note">
+      Demo account: data is stored in this browser.
+      Real user accounts require a secure backend.
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+
+  <div class="header">
+    <h2>Task & Earn</h2>
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="container">
+
+    <!-- HOME -->
+    <div id="homePage">
+
+      <div class="card balance">
+        <div>Available Wallet Balance</div>
+        <h1 id="balance">₹0</h1>
+      </div>
+
+      <div class="card">
+        <h3>Welcome 👋</h3>
+        <p id="welcomeName" style="margin-top:8px">User</p>
+      </div>
+
+      <h3 class="section-title">DAILY ONLINE TASK & EARN</h3>
+
+      <div class="card">
+        <div class="plan-row">
+          <b>Task Value</b>
+          <b>Advertised Payout</b>
+        </div>
+
+        <div class="plan-row">
+          <span>₹1,000</span>
+          <span class="payout">₹2,300</span>
+        </div>
+
+        <div class="plan-row">
+          <span>₹2,000</span>
+          <span class="payout">₹4,500</span>
+        </div>
+
+        <div class="plan-row">
+          <span>₹5,000</span>
+          <span class="payout">₹12,000</span>
+        </div>
+
+        <div class="plan-row">
+          <span>₹10,000</span>
+          <span class="payout">₹25,000</span>
+        </div>
+
+        <div class="plan-row">
+          <span>₹20,000</span>
+          <span class="payout">₹50,000</span>
+        </div>
+
+        <br>
+        <b>TIME:</b> UP TO 2 HOURS
+
+        <br><br>
+        <b>WORK PROCESS:</b>
+        <p style="margin-top:6px">
+          Complete Task → Submit Proof → Verification → Payout
+        </p>
+      </div>
+
+      <div class="card info">
+        <b>Important:</b><br>
+        Payout examples are not guaranteed income.
+        Actual payment depends on verified work and
+        clearly stated task conditions. Do not pay
+        money to unlock a task without verifying
+        the legitimacy of the offer.
+      </div>
+    </div>
+
+    <!-- TASKS -->
+    <div id="tasksPage" class="hidden">
+      <h3 class="section-title">Available Tasks</h3>
+      <div id="taskList"></div>
+    </div>
+
+    <!-- TASK PAYMENT / QR PAGE -->
+    <div id="taskPaymentPage" class="hidden">
+
+      <h3 class="section-title">Selected Task</h3>
+
+      <div class="card">
+        <div class="plan-row">
+          <b>Task Value</b>
+          <b id="selectedTaskValue">₹0</b>
+        </div>
+
+        <div class="plan-row">
+          <span>Advertised Payout</span>
+          <b class="payout" id="selectedTaskPayout">₹0</b>
+        </div>
+      </div>
+
+      <div class="card qr-box">
+        <h3>Payment QR</h3>
+        <p style="margin-top:10px">
+          Verify the payment details before making
+          any payment.
+        </p>
+
+        <img id="taskQrImage"
+          src="qr.png"
+          alt="Payment QR Code">
+
+        <p id="taskQrError"
+          class="error hidden">
+          QR image not found. Put qr.png in the
+          same folder as index.html.
+        </p>
+
+        <div class="upi">
+          UPI: 12785512@axl
+        </div>
+
+        <p class="info" style="margin-top:15px">
+          This screen displays payment information only.
+          It does not confirm or verify a payment.
+        </p>
+
+        <button class="task-btn"
+          onclick="showPage('tasks')">
+          Back to Tasks
+        </button>
+      </div>
+    </div>
+
+    <!-- WALLET -->
+    <div id="walletPage" class="hidden">
+      <h3 class="section-title">Wallet</h3>
+
+      <div class="card balance">
+        <div>Wallet Balance</div>
+        <h1 id="walletBalance">₹0</h1>
+      </div>
+
+      <div class="card qr-box">
+        <h3>Payment QR</h3>
+
+        <img id="walletQrImage"
+          src="qr.png"
+          alt="Payment QR Code">
+
+        <p id="walletQrError"
+          class="error hidden">
+          QR image not found. Put qr.png in the
+          same folder as index.html.
+        </p>
+
+        <div class="upi">UPI: 12785512@axl</div>
+      </div>
+
+      <div class="card">
+        <h3>Work Process</h3>
+        <p style="margin-top:10px;line-height:1.6">
+          1. Select a task.<br>
+          2. Read the task instructions.<br>
+          3. Complete the work.<br>
+          4. Submit valid proof.<br>
+          5. Wait for verification.
+        </p>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="profilePage" class="hidden">
+      <h3 class="section-title">My Profile</h3>
+
+      <div class="card">
+        <label for="profileName">Name</label>
+        <input id="profileName" type="text">
+
+        <label for="profileMobile">Mobile</label>
+        <input id="profileMobile" type="text" readonly>
+
+        <button class="primary"
+          onclick="saveProfile()">Save Profile</button>
+
+        <div id="profileMsg" aria-live="polite"></div>
+      </div>
+
+      <div class="card">
+        <h3>Support</h3>
+        <p style="margin:10px 0">WhatsApp Support</p>
+
+        <button class="primary"
+          onclick="openWhatsApp()">Contact Support</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="bottom-nav">
+    <button id="navHome" class="active"
+      onclick="showPage('home')">🏠<br>Home</button>
+
+    <button id="navTasks"
+      onclick="showPage('tasks')">📋<br>Tasks</button>
+
+    <button id="navWallet"
+      onclick="showPage('wallet')">💰<br>Wallet</button>
+
+    <button id="navProfile"
+      onclick="showPage('profile')">👤<br>Profile</button>
+  </div>
+
+</div>
+
+<script>
+"use strict";
+
+const plans = [
+  { value: 1000, payout: 2300 },
+  { value: 2000, payout: 4500 },
+  { value: 5000, payout: 12000 },
+  { value: 10000, payout: 25000 },
+  { value: 20000, payout: 50000 }
+];
+
+function getEl(id) {
+  return document.getElementById(id);
+}
+
+function showLogin() {
+  getEl("loginForm").classList.remove("hidden");
+  getEl("registerForm").classList.add("hidden");
+  getEl("loginTab").classList.add("active");
+  getEl("registerTab").classList.remove("active");
+}
+
+function showRegister() {
+  getEl("loginForm").classList.add("hidden");
+  getEl("registerForm").classList.remove("hidden");
+  getEl("loginTab").classList.remove("active");
+  getEl("registerTab").classList.add("active");
+}
+
+function setMessage(id, message, type) {
+  const box = getEl(id);
+  box.className = type;
+  box.textContent = message;
+}
+
+function register() {
+  const name = getEl("regName").value.trim();
+  const mobile = getEl("regMobile").value.replace(/\D/g, "");
+  const pass = getEl("regPass").value;
+  const pass2 = getEl("regPass2").value;
+
+  if (!name || !mobile || !pass || !pass2) {
+    setMessage("registerMsg", "Please fill all fields.", "error");
+    return;
+  }
+
+  if (!/^\d{10}$/.test(mobile)) {
+    setMessage("registerMsg", "Enter a valid 10-digit mobile number.", "error");
+    return;
+  }
+
+  if (pass.length < 6) {
+    setMessage("registerMsg", "Password must be at least 6 characters.", "error");
+    return;
+  }
+
+  if (pass !== pass2) {
+    setMessage("registerMsg", "Passwords do not match.", "error");
+    return;
+  }
+
+  try {
+    if (localStorage.getItem("taskUser_" + mobile)) {
+      setMessage("registerMsg", "Account already exists.", "error");
+      return;
+    }
+
+    const user = {
+      name: name,
+      mobile: mobile,
+      password: pass,
+      balance: 0
+    };
+
+    localStorage.setItem("taskUser_" + mobile, JSON.stringify(user));
+
+    setMessage("registerMsg", "Registration successful. Please login.", "success");
+    getEl("loginUser").value = mobile;
+
+    setTimeout(showLogin, 700);
+  } catch (error) {
+    setMessage("registerMsg", "Could not save account in this browser.", "error");
+  }
+}
+
+function login() {
+  const mobile = getEl("loginUser").value.replace(/\D/g, "");
+  const pass = getEl("loginPass").value;
+  const data = localStorage.getItem("taskUser_" + mobile);
+
+  if (!mobile || !pass) {
+    setMessage("loginMsg", "Enter mobile number and password.", "error");
+    return;
+  }
+
+  if (!data) {
+    setMessage("loginMsg", "Account not found. Please register.", "error");
+    return;
+  }
+
+  try {
+    const user = JSON.parse(data);
+
+    if (user.password !== pass) {
+      setMessage("loginMsg", "Incorrect password.", "error");
+      return;
+    }
+
+    localStorage.setItem("loggedUser", mobile);
+    openApp();
+  } catch (error) {
+    setMessage("loginMsg", "Account data could not be read.", "error");
+  }
+}
+
+function getCurrentUser() {
+  const mobile = localStorage.getItem("loggedUser");
+  if (!mobile) return null;
+
+  try {
+    return JSON.parse(localStorage.getItem("taskUser_" + mobile));
+  } catch (error) {
+    return null;
+  }
+}
+
+function openApp() {
+  const user = getCurrentUser();
+
+  if (!user) {
+    logout();
+    return;
+  }
+
+  getEl("authPage").style.display = "none";
+  getEl("app").style.display = "block";
+
+  loadUser();
+  showPage("home");
+}
+
+function loadUser() {
+  const user = getCurrentUser();
+  if (!user) return;
+
+  getEl("welcomeName").textContent = "Hello, " + user.name + " 👋";
+  getEl("balance").textContent = formatRupees(user.balance);
+  getEl("walletBalance").textContent = formatRupees(user.balance);
+  getEl("profileName").value = user.name;
+  getEl("profileMobile").value = user.mobile;
+}
+
+function formatRupees(value) {
+  return "₹" + Number(value || 0).toLocaleString("en-IN");
+}
+
+function logout() {
+  localStorage.removeItem("loggedUser");
+  getEl("app").style.display = "none";
+  getEl("authPage").style.display = "flex";
+  getEl("loginPass").value = "";
+  setMessage("loginMsg", "", "");
+  showLogin();
+}
+
+function hideAllPages() {
+  [
+    "homePage",
+    "tasksPage",
+    "taskPaymentPage",
+    "walletPage",
+    "profilePage"
+  ].forEach(id => getEl(id).classList.add("hidden"));
+
+  ["navHome", "navTasks", "navWallet", "navProfile"]
+    .forEach(id => getEl(id).classList.remove("active"));
+}
+
+function showPage(page) {
+  hideAllPages();
+
+  const pageMap = {
+    home: "homePage",
+    tasks: "tasksPage",
+    taskPayment: "taskPaymentPage",
+    wallet: "walletPage",
+    profile: "profilePage"
+  };
+
+  const navMap = {
+    home: "navHome",
+    tasks: "navTasks",
+    wallet: "navWallet",
+    profile: "navProfile"
+  };
+
+  if (!pageMap[page]) return;
+
+  getEl(pageMap[page]).classList.remove("hidden");
+
+  if (navMap[page]) {
+    getEl(navMap[page]).classList.add("active");
+  }
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function renderTasks() {
+  const list = getEl("taskList");
+  list.innerHTML = "";
+
+  plans.forEach(plan => {
+    const card = document.createElement("div");
+    card.className = "plan";
+
+    const heading = document.createElement("div");
+    heading.className = "plan-row";
+
+    const name = document.createElement("b");
+    name.textContent = "Task Value";
+
+    const value = document.createElement("b");
+    value.textContent = formatRupees(plan.value);
+
+    heading.append(name, value);
+
+    const payoutRow = document.createElement("div");
+    payoutRow.className = "plan-row";
+
+    const payoutLabel = document.createElement("span");
+    payoutLabel.textContent = "Advertised Payout";
+
+    const payout = document.createElement("span");
+    payout.className = "payout";
+    payout.textContent = formatRupees(plan.payout);
+
+    payoutRow.append(payoutLabel, payout);
+
+    const button = document.createElement("button");
+    button.className = "task-btn";
+    button.textContent = "Select Task";
+    button.addEventListener("click", () => selectTask(plan.value, plan.payout));
+
+    card.append(heading, payoutRow, button);
+    list.appendChild(card);
+  });
+}
+
+function selectTask(value, payout) {
+  getEl("selectedTaskValue").textContent = formatRupees(value);
+  getEl("selectedTaskPayout").textContent = formatRupees(payout);
+
+  showPage("taskPayment");
+  checkQrImages();
+}
+
+function checkQrImages() {
+  ["taskQrImage", "walletQrImage"].forEach(id => {
+    const img = getEl(id);
+    const error = getEl(id === "taskQrImage" ? "taskQrError" : "walletQrError");
+
+    img.onerror = () => {
+      img.classList.add("hidden");
+      error.classList.remove("hidden");
+    };
+
+    img.onload = () => {
+      img.classList.remove("hidden");
+      error.classList.add("hidden");
+    };
+
+    if (img.complete && img.naturalWidth === 0) {
+      img.onerror();
+    }
+  });
+}
+
+function saveProfile() {
+  const user = getCurrentUser();
+  if (!user) return;
+
+  const name = getEl("profileName").value.trim();
+
+  if (!name) {
+    setMessage("profileMsg", "Name cannot be empty.", "error");
+    return;
+  }
+
+  user.name = name;
+
+  try {
+    localStorage.setItem("taskUser_" + user.mobile, JSON.stringify(user));
+    setMessage("profileMsg", "Profile saved successfully.", "success");
+    loadUser();
+  } catch (error) {
+    setMessage("profileMsg", "Could not save profile.", "error");
+  }
+}
+
+function openWhatsApp() {
+  window.open("https://wa.me/916260276255", "_blank");
+}
+
+renderTasks();
+checkQrImages();
+
+if (localStorage.getItem("loggedUser")) {
+  openApp();
+}
+</script>
+
+</body>
+</html>
